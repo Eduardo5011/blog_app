@@ -14,18 +14,16 @@ app.use(credentials);
 
 app.use(cors(corsOptions));
 
+app.use(express.urlencoded({ extended: false }));
+
 app.use(express.json());
 
-app.post("/register", (req, res) => {
-  const { username, password } = req.body;
-  res.json({ requestData: { username, password } });
-});
+app.use('/register', require('./routes/register'))
 
-app.listen(PORT, function (err) {
-  if (err) console.log("Error in server setup");
-  console.log("Server listening on Port", PORT);
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
-
 
 /*
 

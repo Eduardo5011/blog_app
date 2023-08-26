@@ -19,9 +19,16 @@ const Register = () => {
           withCredentials: true,
         }
         );
+        if(response.status === 201) {
+          alert('registration successful')
+        } else if(response.sendStatus === 409){
+          alert('username taken')
+        } else {
+          alert('registration failed')
+        }
         console.log(response)
     } catch (err) {
-
+      console.log(err)
     }
   };
 
