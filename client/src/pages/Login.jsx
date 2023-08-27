@@ -1,29 +1,31 @@
 import { useState } from "react";
-import axios from '../utils/axios'
+import axios from "../utils/axios";
 
-const LOGIN_URL = '/login'
+const LOGIN_URL = "/login";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({username, password}),
+        JSON.stringify({ username, password }),
         {
-          headers: {'Content-Type': 'application/json'},
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
-        )
-        console.log(response)
+      );
+      console.log(response);
+      setUsername("")
+      setPassword("")
     } catch (err) {
-
+      console.log(err);
     }
-  }
+  };
 
   return (
     <form className="login" onSubmit={handleSubmit}>
