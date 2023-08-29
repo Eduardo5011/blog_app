@@ -24,6 +24,7 @@ const Login = () => {
       );
       if (response.status === 200) {
         setRedirect(true);
+        alert("logged in successful")
       } else {
         alert("wrong credentials");
       }
