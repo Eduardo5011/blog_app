@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 const handleProfile = async (req, res) => {
-  const { refreshToken } = req.cookies;
-  jwt.verify(refreshToken, process.env.ACCESS_TOKEN_SECRET, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
+  const {refreshToken} = req.cookies
+  res.json(req.cookies)
+
+
 };
 
 module.exports = { handleProfile };
