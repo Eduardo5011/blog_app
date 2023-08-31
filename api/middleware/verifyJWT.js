@@ -1,35 +1,20 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-const verifyJWT = async (req, res) => {
-    const {cookies} = req.cookies;
-
-  if (!cookies?.jwt) {
-    return res.sendStatus(401);
-  }
-
-  const refreshToken = cookies.jwt;
-
-  const foundUser = await User.findOne({ refreshToken }).exec();
-
-  if (!foundUser) {
-    return res.sendStatus(403); // Forbidden
-  }
-
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err || foundUser.username !== decoded.UserInfo.username) {
-      return res.sendStatus(403);
-    }
-
-    const accessToken = jwt.sign(
-      {
-        UserInfo: {
-          username: decoded.UserInfo.username,
-        },
-      },
-      process.env.ACCESS_TOKEN_SECRET
+const verifyJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
+    const token = authHeader.split(' ')[1];
+    console.log(token)
+    jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) return res.sendStatus(403); //invalid token
+            req.user = decoded.UserInfo.username;
+            req.roles = decoded.UserInfo.roles;
+            next();
+        }
     );
+}
 
-    res.json({ accessToken });
-  });
-};
-module.exports = verifyJWT;
+module.exports = verifyJWT
